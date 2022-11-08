@@ -4,7 +4,7 @@ import bank_pb2_grpc
 import time
 import json
 
-from utilities import get_operation, configure_logger, get_result_name
+from utilities import get_operation, get_source_type_name, configure_logger, get_result_name
 from concurrent import futures
 
 logger = configure_logger("Customer")
@@ -46,7 +46,15 @@ class Customer:
             )
             response = self.stub.MsgDelivery(customer_request)
             self.recvMsg.append(response)
-            logger.info("Customer {} has recevied the response {}".format(self.id, response, ))      
+            logger.info("Customer {} has recevied the response from {} id {}, event id {}, amount {}, clock {}".format(
+                self.id, 
+                get_source_type_name(response.source_type), 
+                response.id,
+                response.event_id,
+                response.amount,
+                response.clock
+                )
+            )      
 
 
 def execute_customer_request(id, branch_bind_address, events):

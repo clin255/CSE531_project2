@@ -116,22 +116,16 @@ def main():
             logger.info("Wait for 1 second!")
             time.sleep(1)
         elif len(branch_output) == 3:
-            logger.info("Exporting event data:")
+            logger.info("Exporting event data ... ")
             break
     events_output = reorg_event_output(branch_output)
     json_output = json.dumps(events_output, indent = 4)
-    pdb.set_trace()
-    #with open("output_project_2.json", "w") as file:
-    #    file.write(json_output)
-    re_format_json = ""
-    for line in json_output.splitlines():
-        if re.match("\s{12,17}.*", line):
-            line = line.replace("\n", "")
-        re_format_json += line
+
     
-    with open("dump.json", "a") as file:
-        file.write(re_format_json)
-        
+    with open(output_file, "w") as file:
+        file.write(json_output)
+    logger.info("Data has exported to file {}".format(output_file))
+
     for worker in workers:
         worker.terminate()
 
